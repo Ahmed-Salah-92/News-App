@@ -7,10 +7,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.ragdoll.newsapp.databinding.ActivitySignUpBinding
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -21,6 +27,9 @@ class SignUpActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // Initialize Firebase Auth
+        auth = Firebase.auth
 
         binding.alreadyHaveAccTv.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -46,10 +55,36 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "Passwords don't match!", Toast.LENGTH_SHORT).show()
             else {
                 // Proceed with sign up logic
-                Toast.makeText(this, "Sign up successful!", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, HomeActivity::class.java))
-                finish()
+                binding.loadingProgressBar.isVisible = true
+                addUserToFirebase(email, password)
             }
         }
     }
+
+    private fun addUserToFirebase(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful)
+                    // Sign in success, update UI with the signed-in user's information
+                    verifyEmail()
+                 else {
+                    // If sign in fails, display a message to the user.
+                    binding.loadingProgressBar.isVisible = false
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun verifyEmail() {
+        val user = Firebase.auth.currentUser
+
+        user!!.sendEmailVerification()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    binding.loadingProgressBar.isVisible = false
+                    Toast.makeText(this, "Check your email!", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
 }
+
