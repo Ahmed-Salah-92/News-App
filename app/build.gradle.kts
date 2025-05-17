@@ -33,10 +33,24 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
 
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    // Gson Converter
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    // OkHttp Logging Interceptor
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    // Admob
+    implementation("com.google.android.gms:play-services-ads:24.2.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
