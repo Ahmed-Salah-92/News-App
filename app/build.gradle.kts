@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+
 }
 
 android {
@@ -57,6 +58,12 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
     // Firebase Authentication library
     implementation("com.google.firebase:firebase-auth")
+
+    // Serialized Name
+    implementation("com.google.code.gson:gson:2.13.1")
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
