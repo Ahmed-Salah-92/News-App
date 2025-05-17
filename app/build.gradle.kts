@@ -55,7 +55,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-ads:24.2.0")
     // Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
-
+    // Firebase Authentication library
+    implementation("com.google.firebase:firebase-auth")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
