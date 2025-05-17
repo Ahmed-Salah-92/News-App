@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.ragdoll.newsapp" />
-                  <option name="mobileSdkAppId" value="1:131377520482:android:949608823305336042d63b" />
-                  <option name="projectId" value="news-project-rcc-39" />
-                  <option name="projectNumber" value="131377520482" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
