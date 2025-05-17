@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -51,6 +53,10 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     // Admob
     implementation("com.google.android.gms:play-services-ads:24.2.0")
+    // Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

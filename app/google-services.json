@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "131377520482",
+    "project_id": "news-project-rcc-39",
+    "storage_bucket": "news-project-rcc-39.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131377520482:android:949608823305336042d63b",
+        "android_client_info": {
+          "package_name": "com.ragdoll.newsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBffnvoo_3wV6UJ2BbOCYLa74BZt4VVlPM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
