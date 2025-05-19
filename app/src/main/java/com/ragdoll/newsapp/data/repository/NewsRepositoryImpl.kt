@@ -21,8 +21,12 @@ class NewsRepositoryImpl(
         return Resource.Error(response.message())
     }
 
-    override suspend fun getNewsHeadlines(): Resource<APIResponse> =
-        responseToResource(newsRemoteDataSource.getTopHeadlines())
+    override suspend fun getNewsHeadlines(
+        countryCode: String,
+        category: String,
+        page: Int
+    ): Resource<APIResponse> =
+        responseToResource(newsRemoteDataSource.getTopHeadlines(countryCode, category, page))
 
     override suspend fun getNewsByCategory(category: String): Resource<APIResponse> {
         TODO("Not yet implemented")

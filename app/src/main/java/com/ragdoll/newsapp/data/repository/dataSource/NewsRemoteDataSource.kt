@@ -4,5 +4,10 @@ import com.ragdoll.newsapp.data.model.APIResponse
 import retrofit2.Response
 
 interface NewsRemoteDataSource {
-    suspend fun getTopHeadlines(): Response<APIResponse>
+
+    suspend fun getTopHeadlines(
+        countryCode: String,
+        category: String,
+        page: Int
+    ): Response<APIResponse>
 }

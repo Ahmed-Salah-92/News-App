@@ -11,5 +11,6 @@ class GetNewsHeadLinesUseCase(private val newsRepository: NewsRepository) {
      *
      * @return A Resource object containing the API response.
      */
-    suspend fun execute(): Resource<APIResponse> = newsRepository.getNewsHeadlines()
+    suspend fun execute(countryCode: String, category: String, page: Int): Resource<APIResponse> =
+        newsRepository.getNewsHeadlines(countryCode, category, page)
 }
