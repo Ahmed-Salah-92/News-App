@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         }
         // Get the news articles.
         loadingNews()
-
         // Set up AdMob Create a new ad view.
         val adView = AdView(this)
         adView.adUnitId = "ca-app-pub-3940256099942544/9214589741" // Sample Test ad unit ID.
