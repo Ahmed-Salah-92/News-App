@@ -7,6 +7,10 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     // Kotlin Kapt plugin
     id("kotlin-kapt")
+    // Kotlin Symbol Processing plugin
+    id("com.google.devtools.ksp")
+    // Hilt dependency Injection plugin
+    id("com.google.dagger.hilt.android")
 
 }
 
@@ -77,7 +81,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
     // Firebase Authentication library
     implementation("com.google.firebase:firebase-auth")
-
+    // Hilt Dependency Injection
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    // Kotlin Symbol Processing for Hilt
+    ksp("com.google.dagger:hilt-android-compiler:2.56.2")
 
     // Serialized Name
     implementation("com.google.code.gson:gson:2.13.1")
