@@ -11,6 +11,8 @@ plugins {
     id("com.google.devtools.ksp")
     // Hilt dependency Injection plugin
     id("com.google.dagger.hilt.android")
+    // Safe args plugin Kotlin-Only
+    id("androidx.navigation.safeargs.kotlin")
 
 }
 
@@ -81,11 +83,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
     // Firebase Authentication library
     implementation("com.google.firebase:firebase-auth")
-    // Hilt Dependency Injection
-    implementation("com.google.dagger:hilt-android:2.56.2")
-    // Kotlin Symbol Processing for Hilt
-    ksp("com.google.dagger:hilt-android-compiler:2.56.2")
 
+    /*MVVM + Clean Architecture*/
     // Serialized Name
     implementation("com.google.code.gson:gson:2.13.1")
     // Coroutines
@@ -97,6 +96,13 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.0")
     // Annotation processor
     kapt("androidx.lifecycle:lifecycle-compiler:2.9.0")
+    // Hilt Dependency Injection
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    // Kotlin Symbol Processing for Hilt
+    ksp("com.google.dagger:hilt-android-compiler:2.56.2")
+    // Views/Fragments integration
+    implementation("androidx.navigation:navigation-fragment:2.9.0")
+    implementation("androidx.navigation:navigation-ui:2.9.0")
 
 
     implementation(libs.androidx.core.ktx)

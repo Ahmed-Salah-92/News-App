@@ -5,19 +5,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.ragdoll.newsapp.databinding.ActivityMainBinding
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import okhttp3.logging.HttpLoggingInterceptor.Level
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         // Get the news articles.
-        loadingNews()
+        /*loadingNews()
         // Set up AdMob Create a new ad view.
         val adView = AdView(this)
         adView.adUnitId = "ca-app-pub-3940256099942544/9214589741" // Sample Test ad unit ID.
@@ -45,10 +35,17 @@ class MainActivity : AppCompatActivity() {
         binding.adViewContainer.addView(adView)
         // Load the ad.
         val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+        adView.loadAd(adRequest)*/
+        // Set up the navigation component.
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        // Set up the bottom navigation view with the navController.
+        binding.bottomNavigationView.setupWithNavController(navController)
     }
 
-    private fun loadingNews() {
+    /*private fun loadingNews() {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(Level.BASIC)
         val client = OkHttpClient.Builder()
@@ -74,14 +71,14 @@ class MainActivity : AppCompatActivity() {
                 binding.loadingProgressBar.isVisible = false
                 if (p1.isSuccessful) {
                     val articles = p1.body()?.articles
-                    /*if (articles.isNullOrEmpty()) {
+                    *//*if (articles.isNullOrEmpty()) {
                         binding.noArticlesTv.isVisible = true
                     } else {
                         //Log.d("trace", "Article: ${articles?.get(0)}")
                         val adapter = ArticleAdapter(this@MainActivity, articles)
                         binding.articlesRv.adapter = adapter
                         binding.articlesRv.isVisible = false
-                    }*/
+                    }*//*
 
                     if (articles.isNullOrEmpty()) {
                         binding.noArticlesTv.isVisible = true
@@ -98,5 +95,5 @@ class MainActivity : AppCompatActivity() {
                 //Log.d("trace", "Error: ${p1.message}")
             }
         })
-    }
+    }*/
 }
