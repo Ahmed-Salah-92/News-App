@@ -5,13 +5,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.ragdoll.newsapp.databinding.ActivityMainBinding
+import com.ragdoll.newsapp.presentation.viewmodel.NewsViewModel
+import com.ragdoll.newsapp.presentation.viewmodel.NewsViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    // View Binding.
+    @Inject
+    lateinit var viewModelFactory: NewsViewModelFactory
+    lateinit var viewModel: NewsViewModel
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +50,7 @@ class MainActivity : AppCompatActivity() {
 
         // Set up the bottom navigation view with the navController.
         binding.bottomNavigationView.setupWithNavController(navController)
+        viewModel = ViewModelProvider(this, viewModelFactory)[NewsViewModel::class.java]
     }
 
     /*private fun loadingNews() {

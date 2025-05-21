@@ -5,29 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.ragdoll.newsapp.data.util.Resource
+import com.ragdoll.newsapp.databinding.FragmentNewsBinding
+import com.ragdoll.newsapp.presentation.adapter.ArticleAdapter
+import com.ragdoll.newsapp.presentation.viewmodel.NewsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NewsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class NewsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentNewsBinding
+    private lateinit var viewModel: NewsViewModel
+    private lateinit var articleAdapter: ArticleAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,23 +25,75 @@ class NewsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_news, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NewsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NewsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentNewsBinding.bind(view)
+        viewModel = (activity as MainActivity).viewModel
+        initRecyclerView()
+        viewNewsList()
+        toolbar()
+    }
+
+    private fun toolbar() {
+        binding.toolbarTitle.text = "general News".replaceFirstChar { it.uppercase() }
+    }
+
+    private fun initRecyclerView() {
+        articleAdapter = ArticleAdapter()
+        binding.newsContent.articlesRv.adapter = articleAdapter
+    }
+
+    private fun viewNewsList() {
+        viewModel.getNewsHeadLines("us", "general", 1)
+        viewModel.newsHeadLines.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Resource.Loading -> {
+                    showProgressBar()
+                    hideNoArticlesFound()
                 }
+
+                is Resource.Success -> {
+                    hideProgressBar()
+                    hideNoArticlesFound()
+                    response.data?.let {
+                        if (it.articles.isEmpty()) {
+                            binding.newsContent.noArticlesTv.text = "No articles found"
+                            binding.newsContent.noArticlesTv.textSize = 20f
+                            showNoArticlesFound()
+                        } else {
+                            hideNoArticlesFound()
+                        }
+                        articleAdapter.diffUtil.submitList(it.articles.toList())
+                        //Log.d("newsList", "viewNewsList: ${it.articles.toList()}")
+                    }
+                }
+
+                is Resource.Error -> {
+                    hideProgressBar()
+                    response.message?.let { message ->
+                        binding.newsContent.noArticlesTv.text = "An error accured : $message"
+                        binding.newsContent.noArticlesTv.textSize = 14f
+                        showNoArticlesFound()
+                    }
+                }
+
             }
+        }
+    }
+
+    private fun showProgressBar() {
+        binding.newsContent.loadingProgressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        binding.newsContent.loadingProgressBar.visibility = View.INVISIBLE
+    }
+
+    private fun showNoArticlesFound() {
+        binding.newsContent.noArticlesTv.visibility = View.VISIBLE
+    }
+
+    private fun hideNoArticlesFound() {
+        binding.newsContent.noArticlesTv.visibility = View.INVISIBLE
     }
 }
