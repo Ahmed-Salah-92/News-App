@@ -15,6 +15,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.ragdoll.newsapp.databinding.ActivityHomeBinding
+import com.ragdoll.newsapp.presentation.ui.activity.MainActivity
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -123,5 +124,3 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 }
-
-

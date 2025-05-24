@@ -32,8 +32,11 @@ class NewsViewModel(
                     val apiResponse = getNewsHeadLinesUseCase.execute(countryCode, category, page)
                     newsHeadLines.postValue(apiResponse)
                 } else
-                    newsHeadLines.postValue(Resource.Error(app
-                                .getString(R.string.no_internet_connection))
+                    newsHeadLines.postValue(
+                        Resource.Error(
+                            app
+                                .getString(R.string.no_internet_connection)
+                        )
                     )
             } catch (e: Exception) {
                 newsHeadLines.postValue(Resource.Error(e.message.toString()))
