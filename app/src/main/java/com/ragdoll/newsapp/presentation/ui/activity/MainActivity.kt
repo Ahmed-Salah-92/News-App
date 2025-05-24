@@ -1,4 +1,4 @@
-package com.ragdoll.newsapp
+package com.ragdoll.newsapp.presentation.ui.activity
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.ragdoll.newsapp.R
 import com.ragdoll.newsapp.databinding.ActivityMainBinding
 import com.ragdoll.newsapp.presentation.viewmodel.NewsViewModel
 import com.ragdoll.newsapp.presentation.viewmodel.NewsViewModelFactory

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".NewsFragment">
+    tools:context=".presentation.ui.fragment.NewsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <com.google.android.material.appbar.AppBarLayout
@@ -13,7 +13,6 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -21,13 +20,21 @@
             app:titleTextColor="@android:color/white">
 
             <TextView
-                android:id="@+id/toolbar_title"
+                android:id="@+id/title_tool_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
-                tools:text="NEWS" />
+                tools:text="General News" />
+
+            <ImageButton
+                android:id="@+id/category_btn"
+                android:background="@android:color/transparent"
+                android:contentDescription="TODO"
+                android:src="@drawable/ic_news_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
