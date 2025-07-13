@@ -66,6 +66,8 @@ secrets {
 
     ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
     ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
+    ignoreList.add(".*\\.secret") // Ignore all keys ending
+    ignoreList.add(".*\\.key")    // Ignore all keys ending with ".key")
 }
 dependencies {
 

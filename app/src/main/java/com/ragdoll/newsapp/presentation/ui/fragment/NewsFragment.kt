@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.ragdoll.newsapp.R
 import com.ragdoll.newsapp.data.util.Resource
 import com.ragdoll.newsapp.databinding.FragmentNewsBinding
@@ -50,6 +53,7 @@ class NewsFragment : Fragment() {
         initRecyclerView()
         viewNewsList()
         toolbar(category)
+        setupAdMob()
     }
 
     private fun toolbar(category: String) {
@@ -59,18 +63,16 @@ class NewsFragment : Fragment() {
         }.replaceFirstChar { it.uppercase() }
     }
 
-    private fun initRecyclerView() {
-        //articleAdapter = ArticleAdapter()
-        binding.newsContent.articlesRv.apply {
-            adapter = articleAdapter
-            addOnScrollListener(this@NewsFragment.onScrollListener)
-        }
-
+    private fun initRecyclerView() = binding.newsContent.articlesRv.apply {
+        adapter = articleAdapter
+        addOnScrollListener(this@NewsFragment.onScrollListener)
     }
 
     private fun viewNewsList() {
-        val category = args.category
+
         // Get the news articles based on the category passed from the previous fragment.
+        val category = args.category
+
         viewModel.getNewsHeadLines(country, category, page)
         viewModel.newsHeadLines.observe(viewLifecycleOwner) { response ->
             when (response) {
@@ -172,6 +174,23 @@ class NewsFragment : Fragment() {
                 isScrolling = false
             }
         }
+    }
+
+    // This method is used to set up AdMob for displaying ads in the fragment.
+    private fun setupAdMob() {
+        val adView = AdView(requireContext())
+        adView.adUnitId = "ca-app-pub-3940256099942544/9214589741" // Sample Test ad unit ID.
+        // Request an anchored adaptive banner with a width of 360.
+        adView.setAdSize(
+            AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+                requireContext(),
+                360
+            )
+        )
+        // Replace Ad container with new Ad view.
+        binding.newsContent.adViewContainer.addView(adView)
+        val adRequest = AdRequest.Builder().build() // Create an ad request.
+        adView.loadAd(adRequest) // Load the ad into the AdView.
     }
 }
 

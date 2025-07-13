@@ -35,8 +35,11 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
+        /* Was Done in NewsFragment.kt
         // Get the news articles.
-        /*loadingNews()
+        loadingNews()
         // Set up AdMob Create a new ad view.
         val adView = AdView(this)
         adView.adUnitId = "ca-app-pub-3940256099942544/9214589741" // Sample Test ad unit ID.
@@ -47,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         // Load the ad.
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)*/
+
         // Set up the navigation component.
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.fragmentContainerView) as NavHostFragment
@@ -57,13 +61,13 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory)[NewsViewModel::class.java]
     }
 
-    /*private fun loadingNews() {
+    /* Was Done in NetModule.kt and NewsFragment.kt
+    private fun loadingNews() {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(Level.BASIC)
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
             .build()
-
         val retrofit = Retrofit
             .Builder()
             .baseUrl("https://newsapi.org")
