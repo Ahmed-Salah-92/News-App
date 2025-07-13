@@ -85,6 +85,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
     // Firebase Authentication library
     implementation("com.google.firebase:firebase-auth")
+    // SwipeRefreshLayout (pull down swipe-to-refresh)
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
 
     /*MVVM + Clean Architecture*/
     // Serialized Name

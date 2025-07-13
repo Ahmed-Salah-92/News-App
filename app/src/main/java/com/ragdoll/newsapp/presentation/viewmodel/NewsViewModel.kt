@@ -96,4 +96,11 @@ class NewsViewModel(
         return false // No network available
     }
 
+    fun swipRefresh() {
+        // Implement swipe to refresh functionality
+        // This can be done by observing the newsHeadLines LiveData and updating the UI accordingly
+        // You can use a SwipeRefreshLayout in your UI to trigger this function
+        // For example, you can call getNewsHeadLines() again when the user swipes down to refresh
+
+    }
 }

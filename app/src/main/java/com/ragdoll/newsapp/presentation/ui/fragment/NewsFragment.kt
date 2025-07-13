@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -52,6 +53,7 @@ class NewsFragment : Fragment() {
         val category = args.category
         initRecyclerView()
         viewNewsList()
+        refreshNewsList()
         toolbar(category)
         setupAdMob()
     }
@@ -84,6 +86,7 @@ class NewsFragment : Fragment() {
                 is Resource.Success -> {
                     hideProgressBar()
                     hideNoArticlesFound()
+                    binding.newsContent.articlesRv.visibility = View.VISIBLE
                     response.data.let {
                         if (it.articles.isEmpty()) {
                             binding.newsContent.noArticlesTv.text =
@@ -110,11 +113,14 @@ class NewsFragment : Fragment() {
                 is Resource.Error -> {
                     hideProgressBar()
                     response.message.let { message ->
-                        binding.newsContent.noArticlesTv.text = buildString {
-                            append(getString(R.string.an_error_occurred))
-                            append(message)
+                        binding.newsContent.apply {
+                            noArticlesTv.text = buildString {
+                                append(getString(R.string.an_error_occurred))
+                                append(message)
+                            }
+                            noArticlesTv.textSize = 14f
+                            articlesRv.visibility = View.INVISIBLE
                         }
-                        binding.newsContent.noArticlesTv.textSize = 14f
                         showNoArticlesFound()
                     }
                 }
@@ -191,6 +197,23 @@ class NewsFragment : Fragment() {
         binding.newsContent.adViewContainer.addView(adView)
         val adRequest = AdRequest.Builder().build() // Create an ad request.
         adView.loadAd(adRequest) // Load the ad into the AdView.
+    }
+
+    fun refreshNewsList() {
+        //viewModel.swipRefresh()
+        // Reset the page number and flags to load the news articles again.
+        // Call the method to fetch and display the news articles.
+        SwipeRefreshLayout.OnRefreshListener {
+            binding.newsContent.swipeRefresh.isRefreshing = true
+            page = 1
+            isScrolling = false
+            isLoading = false
+            isLastPage = false
+            viewNewsList()
+            binding.newsContent.swipeRefresh.isRefreshing = false
+        }.let {
+            binding.newsContent.swipeRefresh.setOnRefreshListener(it)
+        }
     }
 }
 
