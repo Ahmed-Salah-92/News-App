@@ -30,11 +30,13 @@
 
             <ImageButton
                 android:id="@+id/category_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:contentDescription="TODO"
                 android:src="@drawable/ic_news_40"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:visibility="invisible"
+                tools:visibility="visible" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

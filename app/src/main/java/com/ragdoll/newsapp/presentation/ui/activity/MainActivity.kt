@@ -10,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.ragdoll.newsapp.R
 import com.ragdoll.newsapp.databinding.ActivityMainBinding
+import com.ragdoll.newsapp.presentation.adapter.ArticleAdapter
 import com.ragdoll.newsapp.presentation.viewmodel.NewsViewModel
 import com.ragdoll.newsapp.presentation.viewmodel.NewsViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +20,8 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: NewsViewModelFactory
+    @Inject
+    lateinit var articleAdapter: ArticleAdapter
     lateinit var viewModel: NewsViewModel
     private lateinit var binding: ActivityMainBinding
 
