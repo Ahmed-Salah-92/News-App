@@ -71,10 +71,9 @@ class NewsFragment : Fragment() {
     }
 
     private fun viewNewsList() {
-
         // Get the news articles based on the category passed from the previous fragment.
         val category = args.category
-
+        // Fetch the news headlines using the ViewModel.
         viewModel.getNewsHeadLines(country, category, page)
         viewModel.newsHeadLines.observe(viewLifecycleOwner) { response ->
             when (response) {
@@ -199,8 +198,7 @@ class NewsFragment : Fragment() {
         adView.loadAd(adRequest) // Load the ad into the AdView.
     }
 
-    fun refreshNewsList() {
-        //viewModel.swipRefresh()
+    private fun refreshNewsList() {
         // Reset the page number and flags to load the news articles again.
         // Call the method to fetch and display the news articles.
         SwipeRefreshLayout.OnRefreshListener {
@@ -209,11 +207,17 @@ class NewsFragment : Fragment() {
             isScrolling = false
             isLoading = false
             isLastPage = false
+            viewModel.refreshNewsHeadLines(country, args.category, page)
             viewNewsList()
             binding.newsContent.swipeRefresh.isRefreshing = false
         }.let {
             binding.newsContent.swipeRefresh.setOnRefreshListener(it)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Clear the binding reference to avoid memory leaks.
     }
 }
 

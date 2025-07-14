@@ -7,6 +7,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ragdoll.newsapp.R
@@ -20,26 +21,26 @@ class NewsViewModel(
     private val app: Application,
     private val getNewsHeadLinesUseCase: GetNewsHeadLinesUseCase,
 ) : AndroidViewModel(app) {
-
-    val newsHeadLines: MutableLiveData<Resource<APIResponse>> = MutableLiveData()
+    private val _newsHeadLines = MutableLiveData<Resource<APIResponse>>()
+    val newsHeadLines: LiveData<Resource<APIResponse>> get() = _newsHeadLines
 
     fun getNewsHeadLines(countryCode: String, category: String, page: Int) = viewModelScope
         .launch(Dispatchers.IO) {
             // Check if the network is available before making the API call
-            newsHeadLines.postValue(Resource.Loading) // Set loading state
+            _newsHeadLines.postValue(Resource.Loading) // Set loading state
             try {
                 if (isNetworkAvailable(app)) {
                     val apiResponse = getNewsHeadLinesUseCase.execute(countryCode, category, page)
-                    newsHeadLines.postValue(apiResponse)
+                    _newsHeadLines.postValue(apiResponse)
                 } else
-                    newsHeadLines.postValue(
+                    _newsHeadLines.postValue(
                         Resource.Error(
                             app
                                 .getString(R.string.no_internet_connection)
                         )
                     )
             } catch (e: Exception) {
-                newsHeadLines.postValue(Resource.Error(e.message.toString()))
+                _newsHeadLines.postValue(Resource.Error(e.message.toString()))
             }
         }
 
@@ -96,11 +97,8 @@ class NewsViewModel(
         return false // No network available
     }
 
-    fun swipRefresh() {
-        // Implement swipe to refresh functionality
-        // This can be done by observing the newsHeadLines LiveData and updating the UI accordingly
-        // You can use a SwipeRefreshLayout in your UI to trigger this function
-        // For example, you can call getNewsHeadLines() again when the user swipes down to refresh
-
+    fun refreshNewsHeadLines(countryCode: String, category: String, page: Int = 1) {
+        getNewsHeadLines(countryCode, category, page)
     }
+
 }
