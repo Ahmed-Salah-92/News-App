@@ -40,9 +40,13 @@
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="com.ragdoll.newsapp.DetailsFragment"
+        android:name="com.ragdoll.newsapp.presentation.ui.fragment.DetailsFragment"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details" />
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="selected_article"
+            app:argType="com.ragdoll.newsapp.data.model.Article" />
+    </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.ragdoll.newsapp.presentation.ui.fragment.HomeFragment"

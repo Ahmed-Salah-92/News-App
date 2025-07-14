@@ -13,6 +13,13 @@ import com.ragdoll.newsapp.presentation.adapter.ArticleAdapter.ArticleVH
 
 class ArticleAdapter : RecyclerView.Adapter<ArticleVH>() {
 
+    private var onItemClickListener: ((Article) -> Unit)? = null
+
+    // Set the listener for item clicks
+    fun setOnItemClickListener(listener: (Article) -> Unit) {
+        onItemClickListener = listener
+    }
+
     inner class ArticleVH(val binding: ArticleListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(article: Article) {
@@ -22,6 +29,12 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleVH>() {
                 .load(article.urlToImage)
                 .error(R.drawable.ic_broken_image)
                 .into(binding.articleImv)
+
+            binding.root.setOnClickListener {
+                onItemClickListener?.let {
+                    it(article)
+                }
+            }
         }
     }
 

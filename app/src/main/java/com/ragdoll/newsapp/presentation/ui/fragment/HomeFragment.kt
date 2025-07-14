@@ -122,7 +122,7 @@ class HomeFragment : Fragment() {
             adRequest,
             object : InterstitialAdLoadCallback() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d("TAG", adError.message.toString())
+                    Log.d("TAG", adError.message)
                     mInterstitialAd = null
                 }
 

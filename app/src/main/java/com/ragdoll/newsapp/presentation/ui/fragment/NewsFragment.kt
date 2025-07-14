@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,6 +52,21 @@ class NewsFragment : Fragment() {
         binding = FragmentNewsBinding.bind(view)
         viewModel = (activity as MainActivity).viewModel
         articleAdapter = (activity as MainActivity).articleAdapter
+
+        articleAdapter.setOnItemClickListener { article ->
+            if (article.url.isNotEmpty()) {
+                val bundle = Bundle().apply {
+                    putSerializable("selected_article", article)
+                }
+                findNavController().navigate(
+                    R.id.action_newsFragment_to_detailsFragment,
+                    bundle
+                )
+            } else {
+                Toast.makeText(requireContext(), "Invalid article data", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         val category = args.category
         initRecyclerView()
         viewNewsList()
@@ -162,7 +179,8 @@ class NewsFragment : Fragment() {
         // This method is called when the RecyclerView is scrolled.
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            val layoutManager = binding.newsContent.articlesRv.layoutManager as LinearLayoutManager
+            val layoutManager =
+                binding.newsContent.articlesRv.layoutManager as LinearLayoutManager
             val sizeOfTheCurrentList = layoutManager.itemCount
             val visibleItems = layoutManager.childCount
             val topPosition = layoutManager.findFirstVisibleItemPosition()
