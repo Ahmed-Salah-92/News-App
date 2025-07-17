@@ -2,6 +2,7 @@ package com.ragdoll.newsapp.presentation.di
 
 import android.app.Application
 import com.ragdoll.newsapp.domain.usecase.GetNewsHeadLinesUseCase
+import com.ragdoll.newsapp.domain.usecase.GetSearchedNewsUseCase
 import com.ragdoll.newsapp.presentation.viewmodel.NewsViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -17,7 +18,9 @@ class FactoryModule {
     @Provides
     fun provideNewsViewModelFactory(
         application: Application,
-        getNewsHeadLinesUseCase: GetNewsHeadLinesUseCase
-    ): NewsViewModelFactory = NewsViewModelFactory(application, getNewsHeadLinesUseCase)
+        getNewsHeadLinesUseCase: GetNewsHeadLinesUseCase,
+        getSearchedNewsUseCase: GetSearchedNewsUseCase,
+    ): NewsViewModelFactory =
+        NewsViewModelFactory(application, getNewsHeadLinesUseCase, getSearchedNewsUseCase)
 
 }

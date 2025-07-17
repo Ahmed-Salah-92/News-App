@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ragdoll.newsapp.domain.usecase.GetNewsHeadLinesUseCase
+import com.ragdoll.newsapp.domain.usecase.GetSearchedNewsUseCase
 
 /**
  * This class is a factory for creating instances of the NewsViewModel.
@@ -16,6 +17,7 @@ import com.ragdoll.newsapp.domain.usecase.GetNewsHeadLinesUseCase
 class NewsViewModelFactory(
     private val app: Application,
     private val getNewsHeadLinesUseCase: GetNewsHeadLinesUseCase,
+    private val getSearchedNewsUseCase: GetSearchedNewsUseCase,
 ) : ViewModelProvider.Factory {
     /**
      * This function creates a ViewModel instance of the specified class.
@@ -25,6 +27,6 @@ class NewsViewModelFactory(
      * @return An instance of the specified ViewModel class.
      */
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return NewsViewModel(app,getNewsHeadLinesUseCase) as T
+        return NewsViewModel(app, getNewsHeadLinesUseCase, getSearchedNewsUseCase) as T
     }
 }

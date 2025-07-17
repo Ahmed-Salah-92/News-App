@@ -23,5 +23,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="#00897B"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
+        android:textDirection="anyRtl"
+        android:fitsSystemWindows="true"
+        app:itemRippleColor="@android:color/transparent"
+        app:itemPaddingTop="16dp"
+        app:itemActiveIndicatorStyle="@android:color/transparent"
+        app:itemTextAppearanceActive="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        app:itemIconSize="42dp"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>

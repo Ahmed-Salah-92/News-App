@@ -1,10 +1,12 @@
 package com.ragdoll.newsapp.presentation.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -22,6 +24,10 @@ import com.ragdoll.newsapp.presentation.adapter.ArticleAdapter
 import com.ragdoll.newsapp.presentation.ui.activity.MainActivity
 import com.ragdoll.newsapp.presentation.viewmodel.NewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NewsFragment : Fragment() {
@@ -70,6 +76,7 @@ class NewsFragment : Fragment() {
         val category = args.category
         initRecyclerView()
         viewNewsList()
+        setSearchView()
         refreshNewsList()
         toolbar(category)
         setupAdMob()
@@ -114,7 +121,7 @@ class NewsFragment : Fragment() {
                         }
 
                         articleAdapter.diffUtil.submitList(it.articles.toList())
-                        //Log.d("newsList", "viewNewsList: ${it.articles.toList()}")
+                        Log.e("TAG", "viewNewsList: ${it.articles.toList()}")
 
                         pages =
                             if (it.totalResults % 20 == 0)
@@ -128,11 +135,12 @@ class NewsFragment : Fragment() {
 
                 is Resource.Error -> {
                     hideProgressBar()
+                    Log.e("TAG", "NewsHeadLines: ${response.message}")
                     response.message.let { message ->
                         binding.newsContent.apply {
                             noArticlesTv.text = buildString {
                                 append(getString(R.string.an_error_occurred))
-                                append(message)
+                                append(" $message")
                             }
                             noArticlesTv.textSize = 14f
                             articlesRv.visibility = View.INVISIBLE
@@ -233,9 +241,109 @@ class NewsFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        // Clear the binding reference to avoid memory leaks.
+    private var searchJob: Job? = null
+    private fun setSearchView() {
+        val cat = args.category
+        binding.articleSV.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+/*                searchJob?.cancel() // Cancel any previous search job
+                if (!query.isNullOrBlank()) {
+                    searchJob = viewLifecycleOwner.lifecycleScope.launch {
+                        viewModel.searchedNews(country, cat, query.toString(), page)
+                        viewSearchedNews()
+                    }
+                }*/
+                // Solution for search query submission
+                viewModel.searchedNews(country, cat, query.toString(), page)
+                viewSearchedNews()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+/*                searchJob?.cancel()
+                if (!newText.isNullOrBlank()) {
+                    val delay = 2000L // Delay in milliseconds to avoid too many requests while typing
+                    searchJob = viewLifecycleOwner.lifecycleScope.launch {
+                        // For production, consider using a shorter debounce (e.g., 300–500ms) for better UX.
+                        delay(500)
+                        viewModel.searchedNews(country, cat, newText.toString(), page)
+                        viewSearchedNews()
+                    }
+                } else {
+                    initRecyclerView()
+                    viewNewsList()
+                }*/
+                // Solution for search query submission
+                MainScope().launch {
+                    delay(2000)
+                    viewModel.searchedNews(country, cat, newText.toString(), page)
+                    viewSearchedNews()
+                }
+                return false
+            }
+        })
+
+        binding.articleSV.setOnCloseListener {
+            //searchJob?.cancel()
+            initRecyclerView()
+            viewNewsList()
+            false
+        }
+    }
+
+    // Search for articles by keyword
+    private fun viewSearchedNews() {
+        viewModel.searchNews.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Resource.Loading -> {
+                    showProgressBar()
+                    hideNoArticlesFound()
+                }
+
+                is Resource.Success -> {
+                    hideProgressBar()
+                    hideNoArticlesFound()
+                    binding.newsContent.articlesRv.visibility = View.VISIBLE
+                    response.data.let {
+                        if (it.articles.isEmpty()) {
+                            binding.newsContent.noArticlesTv.text =
+                                getString(R.string.no_articles_is_found)
+                            binding.newsContent.noArticlesTv.textSize = 20f
+                            showNoArticlesFound()
+                        } else {
+                            hideNoArticlesFound()
+                        }
+
+                        articleAdapter.diffUtil.submitList(it.articles.toList())
+                        //Log.d("newsList", "viewNewsList: ${it.articles.toList()}")
+
+                        pages =
+                            if (it.totalResults % 20 == 0)
+                                it.totalResults / 20
+                            else
+                                it.totalResults / 20 + 1 // If not divisible, add one more page
+
+                        isLastPage = page == pages // Check if the current page is the last page
+                    }
+                }
+
+                is Resource.Error -> {
+                    hideProgressBar()
+                    Log.e("TAG", "viewSearchedNews: ${response.message}")
+                    response.message.let { message ->
+                        binding.newsContent.apply {
+                            noArticlesTv.text = buildString {
+                                append(getString(R.string.an_error_occurred))
+                                append(" $message")
+                            }
+                            noArticlesTv.textSize = 14f
+                            articlesRv.visibility = View.INVISIBLE
+                        }
+                        showNoArticlesFound()
+                    }
+                }
+            }
+        }
     }
 }
 
