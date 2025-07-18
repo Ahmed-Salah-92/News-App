@@ -1,6 +1,7 @@
 package com.ragdoll.newsapp.presentation.viewmodel
 
 import android.app.Application
+import android.net.ConnectivityManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ragdoll.newsapp.domain.usecase.GetNewsHeadLinesUseCase
@@ -18,6 +19,7 @@ class NewsViewModelFactory(
     private val app: Application,
     private val getNewsHeadLinesUseCase: GetNewsHeadLinesUseCase,
     private val getSearchedNewsUseCase: GetSearchedNewsUseCase,
+    private val connectivityManager: ConnectivityManager,
 ) : ViewModelProvider.Factory {
     /**
      * This function creates a ViewModel instance of the specified class.
@@ -27,6 +29,11 @@ class NewsViewModelFactory(
      * @return An instance of the specified ViewModel class.
      */
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return NewsViewModel(app, getNewsHeadLinesUseCase, getSearchedNewsUseCase) as T
+        return NewsViewModel(
+            app,
+            getNewsHeadLinesUseCase,
+            getSearchedNewsUseCase,
+            connectivityManager
+        ) as T
     }
 }

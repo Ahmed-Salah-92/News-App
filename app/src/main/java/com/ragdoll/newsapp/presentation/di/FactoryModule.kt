@@ -1,6 +1,7 @@
 package com.ragdoll.newsapp.presentation.di
 
 import android.app.Application
+import android.net.ConnectivityManager
 import com.ragdoll.newsapp.domain.usecase.GetNewsHeadLinesUseCase
 import com.ragdoll.newsapp.domain.usecase.GetSearchedNewsUseCase
 import com.ragdoll.newsapp.presentation.viewmodel.NewsViewModelFactory
@@ -20,7 +21,8 @@ class FactoryModule {
         application: Application,
         getNewsHeadLinesUseCase: GetNewsHeadLinesUseCase,
         getSearchedNewsUseCase: GetSearchedNewsUseCase,
+        connectivityManager: ConnectivityManager,
     ): NewsViewModelFactory =
-        NewsViewModelFactory(application, getNewsHeadLinesUseCase, getSearchedNewsUseCase)
+        NewsViewModelFactory(application, getNewsHeadLinesUseCase, getSearchedNewsUseCase,connectivityManager,)
 
 }

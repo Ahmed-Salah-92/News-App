@@ -2,10 +2,7 @@ package com.ragdoll.newsapp.presentation.viewmodel
 
 import android.app.Application
 import android.net.ConnectivityManager
-import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.NetworkRequest
-import android.os.Build
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -18,30 +15,38 @@ import com.ragdoll.newsapp.domain.usecase.GetNewsHeadLinesUseCase
 import com.ragdoll.newsapp.domain.usecase.GetSearchedNewsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NewsViewModel(
     private val app: Application,
     private val getNewsHeadLinesUseCase: GetNewsHeadLinesUseCase,
     private val getSearchedNewsUseCase: GetSearchedNewsUseCase,
+    private val connectivityManager: ConnectivityManager,        // Injected ConnectivityManager for network checks
 ) : AndroidViewModel(app) {
+
+    // Function to check network availability using coroutines
+    private suspend fun isNetworkAvailable(): Boolean {
+        return withContext(Dispatchers.IO) {
+            val network = connectivityManager.activeNetwork ?: return@withContext false
+            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return@withContext false
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        }
+    }
+
+    // LiveData to hold the news headlines
     private val _newsHeadLines = MutableLiveData<Resource<APIResponse>>()
     val newsHeadLines: LiveData<Resource<APIResponse>> get() = _newsHeadLines
 
     fun getNewsHeadLines(countryCode: String, category: String, page: Int) =
         viewModelScope.launch(Dispatchers.IO) {
-            // Check if the network is available before making the API call
+
             _newsHeadLines.postValue(Resource.Loading) // Set loading state
             try {
-                if (isNetworkAvailable(app)) {
+                if (isNetworkAvailable()) { // Check if the network is available before making the API call
                     val apiResponse = getNewsHeadLinesUseCase.execute(countryCode, category, page)
                     _newsHeadLines.postValue(apiResponse)
                 } else
-                    _newsHeadLines.postValue(
-                        Resource.Error(
-                            app
-                                .getString(R.string.no_internet_connection)
-                        )
-                    )
+                    _newsHeadLines.postValue(Resource.Error(app.getString(R.string.no_internet_connection)))
             } catch (e: Exception) {
                 Log.e("NewsViewModel", "API error: ${e.message}",e)
                 _newsHeadLines.postValue(Resource.Error(e.message.toString()))
@@ -49,7 +54,7 @@ class NewsViewModel(
         }
 
     // Function to check network availability old approach
-    private fun isNetworkAvailable(app: Application): Boolean { // Implement network availability check
+ /*   private fun isNetworkAvailable(app: Application): Boolean { // Implement network availability check
 
         val context = app.applicationContext // Get the application context
         if (context == null) return false // Check if the context is null
@@ -100,15 +105,6 @@ class NewsViewModel(
             }
         }
         return false // No network available
-    }
-
-    /*private suspend fun isNetworkAvailable(app: Application): Boolean {
-        return withContext(Dispatchers.IO) {
-            val connectivityManager = app.getSystemService(ConnectivityManager::class.java)
-            val network = connectivityManager.activeNetwork ?: return@withContext false
-            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return@withContext false
-            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        }
     }*/
 
     fun refreshNewsHeadLines(countryCode: String, category: String, page: Int = 1) {
@@ -121,20 +117,16 @@ class NewsViewModel(
 
     fun searchedNews(countryCode: String, category: String, searchQuery: String, page: Int) =
         viewModelScope.launch {
-            // Check if the network is available before making the API call
+
             _searchNews.postValue(Resource.Loading) // Set loading state
             try {
-                if (isNetworkAvailable(app)) {
+                if (isNetworkAvailable()) { // Check if the network is available before making the API call
                     val apiResponse =
                         getSearchedNewsUseCase.execute(countryCode, category, searchQuery, page)
                     _searchNews.postValue(apiResponse)
                 } else
-                    _searchNews.postValue(
-                        Resource.Error(
-                            app
-                                .getString(R.string.no_internet_connection)
-                        )
-                    )
+                    _searchNews.postValue(Resource.Error(app
+                            .getString(R.string.no_internet_connection)))
             } catch (e: Exception) {
                 Log.e("NewsViewModel", "API error: ${e.message}",e)
                 _searchNews.postValue(Resource.Error(e.message.toString()))
